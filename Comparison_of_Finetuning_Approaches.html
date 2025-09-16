@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine-tuning Approaches Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .comparison-table th:first-child {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            font-size: 1rem;
+            min-width: 180px;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+            vertical-align: top;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background-color: #f8f9ff;
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+        }
+        
+        .approach-name {
+            font-weight: 600;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+        }
+        
+        .cost-high { background: #ffe6e6; color: #d63031; }
+        .cost-medium { background: #fff2e6; color: #e17055; }
+        .cost-low { background: #e6ffe6; color: #00b894; }
+        
+        .performance-high { background: #e6f3ff; color: #0984e3; }
+        .performance-medium { background: #f0e6ff; color: #6c5ce7; }
+        .performance-low { background: #ffe6f0; color: #e84393; }
+        
+        .complexity-high { background: #ffe6e6; color: #d63031; }
+        .complexity-medium { background: #fff2e6; color: #e17055; }
+        .complexity-low { background: #e6ffe6; color: #00b894; }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .notes {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .notes h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .notes ul {
+            list-style-type: none;
+        }
+        
+        .notes li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .notes li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px 6px;
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fine-tuning Approaches Comparison</h1>
+            <p>Choose the right approach for your specific needs</p>
+        </div>
+        
+        <div class="content">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color cost-low"></div>
+                    <span><strong>Cost:</strong> Low → Medium → High</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color performance-high"></div>
+                    <span><strong>Performance:</strong> Low → Medium → High</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color complexity-low"></div>
+                    <span><strong>Complexity:</strong> Low → Medium → High</span>
+                </div>
+            </div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Cost/Resources</th>
+                        <th>Training Time</th>
+                        <th>Performance Impact</th>
+                        <th>Memory Requirements</th>
+                        <th>Technical Complexity</th>
+                        <th>Best Use Cases</th>
+                        <th>Limitations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="approach-name">Full Fine-tuning</td>
+                        <td class="cost-high">Very High<br><small>Updates all parameters</small></td>
+                        <td class="cost-high">Hours to Days<br><small>Depends on model size</small></td>
+                        <td class="performance-high">Excellent<br><small>Maximum adaptation</small></td>
+                        <td class="cost-high">Very High<br><small>Full model + gradients</small></td>
+                        <td class="complexity-medium">Medium<br><small>Standard training</small></td>
+                        <td>• Domain-specific applications<br>• Critical performance needs<br>• Large datasets available</td>
+                        <td>• Expensive compute<br>• Risk of catastrophic forgetting<br>• Storage intensive</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">LoRA (Low-Rank Adaptation)</td>
+                        <td class="cost-low">Low<br><small>1-3% parameters</small></td>
+                        <td class="cost-low">Minutes to Hours<br><small>Much faster</small></td>
+                        <td class="performance-medium">Good<br><small>80-95% of full FT</small></td>
+                        <td class="cost-low">Low<br><small>Only adapter weights</small></td>
+                        <td class="complexity-low">Low<br><small>Easy to implement</small></td>
+                        <td>• Resource constraints<br>• Multiple task variants<br>• Rapid prototyping</td>
+                        <td>• Limited for major domain shifts<br>• May need hyperparameter tuning</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">Instruction Tuning</td>
+                        <td class="cost-medium">Medium<br><small>Task-focused training</small></td>
+                        <td class="cost-medium">Hours<br><small>Moderate datasets</small></td>
+                        <td class="performance-high">Excellent<br><small>For task following</small></td>
+                        <td class="cost-medium">Medium<br><small>Standard requirements</small></td>
+                        <td class="complexity-medium">Medium<br><small>Requires good prompts</small></td>
+                        <td>• Improving instruction following<br>• Multi-task scenarios<br>• General-purpose assistants</td>
+                        <td>• Needs high-quality instructions<br>• May not help with domain knowledge</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">RLHF</td>
+                        <td class="cost-high">High<br><small>Human feedback required</small></td>
+                        <td class="cost-high">Days to Weeks<br><small>Multi-stage process</small></td>
+                        <td class="performance-high">Excellent<br><small>Human-aligned outputs</small></td>
+                        <td class="cost-high">High<br><small>Multiple models needed</small></td>
+                        <td class="complexity-high">High<br><small>Complex pipeline</small></td>
+                        <td>• Safety-critical applications<br>• Human preference alignment<br>• Conversational AI</td>
+                        <td>• Expensive human annotation<br>• Complex implementation<br>• Potential reward hacking</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">Prefix Tuning</td>
+                        <td class="cost-low">Very Low<br><small>Only prefix parameters</small></td>
+                        <td class="cost-low">Minutes<br><small>Very fast</small></td>
+                        <td class="performance-low">Limited<br><small>Task-specific gains</small></td>
+                        <td class="cost-low">Very Low<br><small>Minimal overhead</small></td>
+                        <td class="complexity-low">Low<br><small>Simple concept</small></td>
+                        <td>• Generation tasks<br>• Quick experiments<br>• Constrained resources</td>
+                        <td>• Limited scope<br>• May not generalize well</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">Adapter Layers</td>
+                        <td class="cost-low">Low<br><small>Small bottleneck layers</small></td>
+                        <td class="cost-low">Hours<br><small>Fast training</small></td>
+                        <td class="performance-medium">Good<br><small>Solid adaptation</small></td>
+                        <td class="cost-low">Low<br><small>Minimal storage</small></td>
+                        <td class="complexity-medium">Medium<br><small>Architecture changes</small></td>
+                        <td>• Multi-task learning<br>• Modular systems<br>• Sequential adaptation</td>
+                        <td>• Requires model modification<br>• Inference overhead</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">Task-Specific Heads</td>
+                        <td class="cost-low">Very Low<br><small>Only output layer</small></td>
+                        <td class="cost-low">Minutes<br><small>Fastest option</small></td>
+                        <td class="performance-low">Limited<br><small>Classification only</small></td>
+                        <td class="cost-low">Very Low<br><small>Tiny overhead</small></td>
+                        <td class="complexity-low">Very Low<br><small>Simple linear layer</small></td>
+                        <td>• Classification tasks<br>• Proof of concepts<br>• Budget constraints</td>
+                        <td>• Only for classification<br>• No representation changes</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="approach-name">Retrieval Augmentation (RAG)</td>
+                        <td class="cost-medium">Medium<br><small>Vector DB + inference</small></td>
+                        <td class="cost-low">Hours<br><small>No model training</small></td>
+                        <td class="performance-medium">Good<br><small>Knowledge augmentation</small></td>
+                        <td class="cost-medium">Medium<br><small>Vector storage</small></td>
+                        <td class="complexity-medium">Medium<br><small>System integration</small></td>
+                        <td>• Knowledge-intensive tasks<br>• Changing information<br>• Factual accuracy</td>
+                        <td>• Retrieval quality dependent<br>• Latency overhead<br>• Context limitations</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="notes">
+                <h3>Key Decision Factors</h3>
+                <ul>
+                    <li><strong>Budget & Resources:</strong> LoRA or Adapters for cost-effectiveness, Full Fine-tuning for maximum performance</li>
+                    <li><strong>Dataset Size:</strong> Small datasets favor parameter-efficient methods, large datasets enable full fine-tuning</li>
+                    <li><strong>Domain Gap:</strong> Larger gaps between pre-training and target domain require more extensive adaptation</li>
+                    <li><strong>Deployment Constraints:</strong> Consider inference speed, memory requirements, and model size limits</li>
+                    <li><strong>Maintenance:</strong> Parameter-efficient methods easier to version control and deploy multiple variants</li>
+                    <li><strong>Interpretability:</strong> Some approaches (like adapters) allow better understanding of task-specific changes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
